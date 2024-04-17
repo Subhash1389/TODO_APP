@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="/todo.css">
+</head>
+<body> 
+    <h1>Todo List</h1>
+    <form action="/todo" method="post">
+        <input type="text" name="task" placeholder="Enter task">
+        <button type="submit">Add Task</button>
+    </form>
+    <ul>
+        {{#each todo as |todos|}}      
+            <li id="task_{{todos.id}}" class="{{#if todos.completed}}completed{{/if}}">
+                <span class="task-text">{{todos.work}}</span>
+                <span></span>
+                <span></span>
+                <form action="/update/{{todos.id}}" method="post" style="display: inline;">
+                    <input type="text" name="tasktoup" class="update-input" style="display: none;">
+                    <button type="submit" class="update-button">Update</button>
+                </form>
+                <button onclick="toggleUpdateInput('{{todos.id}}')">Edit</button>
+                <button onclick="toggleTask('{{todos.id}}', this)">{{#if todos.completed}}Unmark{{else}}Complete{{/if}}</button>
+                <form action="/delete/{{todos.id}}" method="post" style="display: inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        {{/each}}
+    </ul>
+
+    <script>
+        function toggleTask(taskId, button) {
+            const taskElement = document.getElementById('task_' + taskId);
+
+            if (taskElement.classList.contains('completed')) {
+                taskElement.classList.remove('completed');
+                button.textContent = 'Complete';
+            } else {
+                taskElement.classList.add('completed');
+                button.textContent = 'Unmark';
+            }
+        }
+
+        function toggleUpdateInput(taskId) {
+            const taskElement = document.getElementById('task_' + taskId);
+            const input = taskElement.querySelector('.update-input');
+            input.style.display = input.style.display === 'none' ? 'inline' : 'none';
+        }
+    </script>
+</body>
+</html>
